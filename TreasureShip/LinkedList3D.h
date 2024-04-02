@@ -28,7 +28,7 @@ private:
 	Node<T>* findNode(Point<int> point)
 	{
 		if (point.X >= size)
-			return NULL;
+			return NULL; // Sup
 
 		Node<LinkedList2D<T>>* xAxisNode = headList; // Find X list
 		for (int i = 0; i < point.X; i++) {
