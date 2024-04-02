@@ -197,7 +197,7 @@ public:
 			delete del;
 		}
 	}
-private:
+protected:
 	int size{ 0 };
 	Node<T>* front{ nullptr };
 

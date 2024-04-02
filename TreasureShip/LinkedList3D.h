@@ -21,7 +21,7 @@ public:
 		findNode(point)->setData(item);
 	}
 
-private:
+protected:
 	Node<LinkedList2D<T>>* headList;
 	int size{ 0 };
 

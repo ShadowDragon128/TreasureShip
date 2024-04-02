@@ -7,6 +7,12 @@
 #pragma once
 namespace DataTypes
 {
+	typedef unsigned long long ulong;
+	typedef unsigned int uint;
+	typedef unsigned short ushort;
+	typedef unsigned char byte;
+	typedef signed char sbyte;
+
 	template <typename T>
 	class Node {
 	public:
@@ -15,7 +21,6 @@ namespace DataTypes
 			this->front = front;
 		}
 		~Node() {
-
 		}
 
 		T getData() { return data; }
