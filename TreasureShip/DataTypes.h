@@ -18,29 +18,32 @@ namespace DataTypes
 	public:
 		Node(T data, Node* front) {
 			this->data = data;
-			this->front = front;
+			this->next = front;
 		}
 		~Node() {
 		}
 
 		T getData() { return data; }
-		Node* getNext() { return front; }
+		Node* getNext() { return next; }
 		void setData(T d) { data = d; }
-		void setNext(Node* n) { front = n; }
+		void setNext(Node* n) { next = n; }
 
 	protected:
 		T data;
-		Node<T>* front;
+		Node<T>* next;
 	};
 
 	template <typename T>
 	class DoublyNode : public Node<T> {
 	public:
-		DoublyNode(Node<T>* back, T data, Node<T>* front) : Node<T>(data, front) {
-			this->back = back;
+		DoublyNode(Node<T>* previous, T data, Node<T>* next) : Node<T>(data, next) {
+			this->previous = previous;
 		}
+
+		Node* getNext() { return previous; }
+		void setPrevious(Node* p) { previous = p; }
 	protected:
-		Node<T>* back;
+		Node<T>* previous;
 	};
 
 	template <typename T>

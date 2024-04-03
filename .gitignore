@@ -32,3 +32,6 @@
 *.app
 *.opendb
 /.vs
+Debug/TreasureShip.pdb
+/TreasureShip/x64
+/x64

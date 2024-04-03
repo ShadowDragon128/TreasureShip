@@ -21,6 +21,12 @@ class LinkedList2D
 * 29.Feb.2024 Copied from LinkedList2D
 * 4.March.2024 Finalized
 */
+
+/*
+* Notes:
+* 1) Optimize the findNode function to take advantage of the fact that their is a pointer to the last node and it doublylinked
+* 2)
+*/
 public:
 	LinkedList2D()
 	{
@@ -29,43 +35,47 @@ public:
 	LinkedList2D(const LinkedList2D<T>& list) // Create a new object of this with what is referenced
 	{
 		// See the equals operator for notes
-		if (!list.front)
+		if (!list.first)
 			return;
 
-		front = new Node<T>{ list.front->getData(), list.front->getNext() };
-		Node<T>* temp = front;
-		Node<T>* nextItem = list.front->getNext();
+		first = new DoublyNode<T>{ nullptr, list.first->getData(), nullptr };
+		DoublyNode<T>* temp = first;
+		DoublyNode<T>* nextItem = list.first->getNext();
 		for (int e = 1; e < list.size; e++)
 		{
-			temp->setNext(new Node<T>{ nextItem->getData(), nullptr });
+			temp->setNext(new DoublyNode<T>{ temp, nextItem->getData(), nullptr });
 			temp = temp->getNext();
 			nextItem = nextItem->getNext();
 		}
+
+		last = temp; // assign last
 
 		size = list.size;
 	}
 
 	LinkedList2D<T>& operator=(const LinkedList2D<T>& list)
 	{
-		if (!list.front) // "IT'S FUC**** RAW, GET OUT!" - Gordon Ramsey
+		if (!list.first) // "IT'S FUC**** RAW, GET OUT!" - Gordon Ramsey
 			return *this;
 
 		for (int e = 0; e < size; e++)
 		{
-			Node<T>* del{ front };
-			front = front->getNext();
+			DoublyNode<T>* del{ first };
+			first = first->getNext();
 			delete del;
 		}
 
-		front = new Node<T>{ list.front->getData(), list.front->getNext() }; // Create the head node
-		Node<T>* temp = front; // set the node mover to head
-		Node<T>* nextItem = list.front->getNext(); // set the next node to pull data from
+		first = new DoublyNode<T>{ nullptr, list.first->getData(), nullptr }; // Create the head node
+		DoublyNode<T>* temp = first; // set the node mover to head
+		DoublyNode<T>* nextItem = list.first->getNext(); // set the next node to pull data from
 		for (int e = 1; e < list.size; e++)
 		{
-			temp->setNext(new Node<T>{ nextItem->getData(), nullptr }); // Create the next new node.
+			temp->setNext(new DoublyNode<T>{ temp, nextItem->getData(), nullptr }); // Create the next new node.
 			temp = temp->getNext(); // set the next node to be edited
 			nextItem = nextItem->getNext(); // also move a node in the referenced list
 		}
+
+		last = temp; // assign last
 
 		size = list.size; // set the size ones
 
@@ -74,25 +84,26 @@ public:
 
 	void prepend(T item)
 	{
-		Node<T>* newNode = new Node<T>{ item, front };
+		DoublyNode<T>* newNode = new DoublyNode<T>{ nullptr, item, first };
 
-		front = newNode;
+		first = newNode;
 
 		size++;
 	}
 
 	void append(T item)
 	{
-		Node<T>* newNode = new Node<T>{ item, nullptr }; // Create node
+		DoublyNode<T>* newNode = new DoublyNode<T>{ last, item, nullptr }; // Create node
 
 		if (size == 0) // Checks
 		{
-			front = newNode;
+			first = newNode;
 			size++;
 			return;
 		}
 
-		findNode<T>(size - 1)->setNext(newNode);
+		//findNode(size - 1)->setNext(newNode);
+		last->setNext(newNode);
 
 		size++;
 	}
@@ -116,16 +127,13 @@ public:
 	{
 		if (index == 0)
 		{
-			//Node<T>* insert = new Node<T>{ item, front };
-			//front = insert;
-			//size++;
 			prepend(item);
 			return;
 		}
 
-		Node<T>* node{ findNode(index - 1) }; // find that damm node
+		DoublyNode<T>* node{ findNode(index - 1) }; // find that damm node
 
-		Node<T>* insert = new Node<T>{ item, node->getNext() }; // create a new node pointing to the next node
+		DoublyNode<T>* insert = new DoublyNode<T>{ node, item, node->getNext() }; // create a new node pointing to the next node
 		node->setNext(insert); // set this node to point to insert
 
 		size++;
@@ -133,20 +141,21 @@ public:
 
 	T remove(int index)
 	{
-		Node<T>* del{ nullptr };
+		DoublyNode<T>* del{ nullptr };
 		T value{ 0 };
 		if (index == 0)
 		{
-			del = front;
-			value = front->getData();
-			front = front->getNext();
+			del = first;
+			value = first->getData();
+			first = first->getNext();
 		}
 		else
 		{
-			Node<T>* node{ findNode(index - 1) }; // get the one right before it
+			DoublyNode<T>* node{ findNode(index - 1) }; // get the one right before it
 			value = node->getNext()->getData(); // get the value of the node to be deleted
 			del = node->getNext();
 			node->setNext(node->getNext()->getNext()); // set the this node to point to the node right after the one in front
+			node->setPrevious(node);
 		}
 
 		delete del; // YOU ARE DED NO BIG SURPRISE
@@ -154,27 +163,30 @@ public:
 		return value;
 	}
 
+	// Needs patching
 	void removeAll(T value)
 	{
-		Node<T>* last{ nullptr };
-		Node<T>* current{ front };
+		//DoublyNode<T>* last{ nullptr };
+		DoublyNode<T>* current{ first };
 		for (int e = 0; e < size; e++)
 		{
 			if (current->getData() == value)
 			{
-				Node<T>* del{ nullptr };
-				if (last) // Check for null ptr it is incase if the node were looking at is the first one in the their.
+				DoublyNode<T>* del{ nullptr };
+				if (current->previous) // Check for null ptr it is incase if the node were looking at is the first one in the their.
 				{
-					last->setNext(current->getNext());
+					current->previous->next = current->next;
+					current->next->previous = current->previous;
 					del = current;
 				}
 				else
 				{
-					front = current->getNext();
+					first = current->next;
+					first->previous = nullptr;
 					del = current;
 				}
 				// Keep last the same
-				current = current->getNext(); // Skip over the discarted node
+				current = current->next; // Skip over the discarted node
 				delete del; // Delete the node
 				size--; // Decrement
 			}
@@ -192,21 +204,22 @@ public:
 	{
 		for (int e = 0; e < size; e++)
 		{
-			Node<T>* del{ front };
-			front = front->getNext();
+			DoublyNode<T>* del{ first };
+			first = first->getNext();
 			delete del;
 		}
 	}
 protected:
 	int size{ 0 };
-	Node<T>* front{ nullptr };
+	DoublyNode<T>* first{ nullptr };
+	DoublyNode<T>* last{ nullptr };
 
-	Node<T>* findNode(int index)
+	DoublyNode<T>* findNode(int index)
 	{
 		if (index >= size)
 			return NULL;
 
-		Node<T>* node = front;
+		DoublyNode<T>* node = first;
 		for (int i = 0; i < index; i++) // find that damm node
 			node = node->getNext();
 
@@ -221,7 +234,7 @@ protected:
 template <typename T>
 ostream& operator<<(ostream& out, const LinkedList2D<T>& list)
 {
-	Node<T>* node = list.front;
+	DoublyNode<T>* node = list.first;
 	cout << "[";
 	for (int e = 0; e < list.size - 1; e++)
 	{

@@ -8,7 +8,7 @@ class LinkedListMatrix : public LinkedList3D<T>
 {	
 public:
 	LinkedListMatrix(Size<int> size) : LinkedList3D<T>() {
-
+		
 	}
 };
 

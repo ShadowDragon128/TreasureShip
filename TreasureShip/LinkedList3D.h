@@ -5,10 +5,20 @@
 using namespace DataTypes;
 
 template <typename T>
-class LinkedList3D
+class LinkedList3D : private LinkedList2D<T>
 {
 public:
-	LinkedList3D() {
+	LinkedList3D() : LinkedList2D<T>() {
+	}
+
+	void prepend(T item, int index)
+	{
+
+	}
+
+	void append(T item, int index)
+	{
+
 	}
 
 	T get(Point<int> point)
@@ -18,12 +28,32 @@ public:
 
 	void set(Point<int> point, T item)
 	{
-		findNode(point)->setData(item);
+		findNode(point)->data = item;
+	}
+
+	int getSize()
+	{
+		return xSize;
+	}
+
+	void insert(Point<int> point, T item)
+	{
+
+	}
+
+	T remove(Point<int> point)
+	{
+
+	}
+
+	void removeAll(T value)
+	{
+
 	}
 
 protected:
 	Node<LinkedList2D<T>>* headList;
-	int size{ 0 };
+	int xSize{ 0 };
 
 	Node<T>* findNode(Point<int> point)
 	{
@@ -37,15 +67,7 @@ protected:
 		
 		LinkedList2D<T>* xAxisList = xAxisNode->data; // Get the pointer for the List
 
-		if (point.Y >= xAxisList->size)
-			return NULL;
-
-		Node<T>* yAxisNode = xAxisList->front; // Find Y
-		for (int i = 0; i < point.Y; i++) {
-			yAxisNode = yAxisNode->getNext();
-		}
-
-		return yAxisNode;
+		return xAxisList->findNode(point.Y); // Find Y
 	}
 };
 
