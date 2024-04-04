@@ -1,3 +1,9 @@
+/*
+* Author: Andrew Vu, Brian Macias Garcia
+* Changelog:
+* 1.Apr.2024 Created
+*/
+
 #pragma once
 #include "LinkedList2D.h"
 #include "DataTypes.h"

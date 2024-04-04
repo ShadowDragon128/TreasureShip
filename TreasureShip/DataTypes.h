@@ -36,21 +36,25 @@ namespace DataTypes
 	template <typename T>
 	class DoublyNode : public Node<T> {
 	public:
-		DoublyNode(Node<T>* previous, T data, Node<T>* next) : Node<T>(data, next) {
+		DoublyNode(DoublyNode<T>* previous, T data, DoublyNode<T>* next) : Node<T>(data, next) {
 			this->previous = previous;
 		}
 
-		Node* getNext() { return previous; }
-		void setPrevious(Node* p) { previous = p; }
+		T getData() { return this->data; }
+		DoublyNode<T>* getNext() { return static_cast<DoublyNode<T>*>(this->next); } // Sussy
+		void setData(T d) { this->data = d; }
+		void setNext(DoublyNode<T>* n) { this->next = n; }
+		DoublyNode<T>* getPrevious() { return previous; }
+		void setPrevious(DoublyNode<T>* p) { previous = p; }
 	protected:
-		Node<T>* previous;
+		DoublyNode<T>* previous;
 	};
 
 	template <typename T>
 	struct Size
 	{
 	public:
-		Size(T X, T Y) {
+		Size(T X, T Y) {	
 			this->X = X;
 			this->Y = Y;
 		}

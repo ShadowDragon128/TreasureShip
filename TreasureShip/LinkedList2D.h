@@ -1,7 +1,8 @@
 /*
 * Author: Andrew Vu, Brian Macias Garcia
 * Changelog:
-* 1.Apr.2024 Created
+* 1.Apr.2024 Copy of Brian's LinkedList class
+* 4.April.2024 Modified to use doubly linked lists
 */
 
 #pragma once
@@ -15,17 +16,9 @@ template <typename T>
 class LinkedList2D
 {
 /*
-* Author: Brian Macias Garcia
-* ChangeLog:
-* 26.Feb.2024 Created
-* 29.Feb.2024 Copied from LinkedList2D
-* 4.March.2024 Finalized
-*/
-
-/*
 * Notes:
 * 1) Optimize the findNode function to take advantage of the fact that their is a pointer to the last node and it doublylinked
-* 2)
+* 2) need to static_cast<DoublyNode<T>*>() some of the nodes within the functions // 
 */
 public:
 	LinkedList2D()
@@ -43,7 +36,7 @@ public:
 		DoublyNode<T>* nextItem = list.first->getNext();
 		for (int e = 1; e < list.size; e++)
 		{
-			temp->setNext(new DoublyNode<T>{ temp, nextItem->getData(), nullptr });
+			temp->setNext(new DoublyNode<T>{ temp, nextItem->data, nullptr });
 			temp = temp->getNext();
 			nextItem = nextItem->getNext();
 		}
@@ -65,12 +58,12 @@ public:
 			delete del;
 		}
 
-		first = new DoublyNode<T>{ nullptr, list.first->getData(), nullptr }; // Create the head node
+		first = new DoublyNode<T>{ nullptr, list.first->data, nullptr }; // Create the head node
 		DoublyNode<T>* temp = first; // set the node mover to head
-		DoublyNode<T>* nextItem = list.first->getNext(); // set the next node to pull data from
+		DoublyNode<T>* nextItem = list.first->next; // set the next node to pull data from
 		for (int e = 1; e < list.size; e++)
 		{
-			temp->setNext(new DoublyNode<T>{ temp, nextItem->getData(), nullptr }); // Create the next new node.
+			temp->setNext(new DoublyNode<T>{ temp, nextItem->data, nullptr }); // Create the next new node.
 			temp = temp->getNext(); // set the next node to be edited
 			nextItem = nextItem->getNext(); // also move a node in the referenced list
 		}
@@ -98,12 +91,14 @@ public:
 		if (size == 0) // Checks
 		{
 			first = newNode;
+			last = newNode;
 			size++;
 			return;
 		}
 
 		//findNode(size - 1)->setNext(newNode);
 		last->setNext(newNode);
+		last = newNode;
 
 		size++;
 	}
@@ -151,11 +146,17 @@ public:
 		}
 		else
 		{
-			DoublyNode<T>* node{ findNode(index - 1) }; // get the one right before it
-			value = node->getNext()->getData(); // get the value of the node to be deleted
-			del = node->getNext();
-			node->setNext(node->getNext()->getNext()); // set the this node to point to the node right after the one in front
-			node->setPrevious(node);
+			DoublyNode<T>* node{ findNode(index) };
+			value = node->getData();
+			del = node;
+			node->getPrevious()->setNext(node->getNext());
+			node->getNext()->setPrevious(node->getPrevious());
+
+			//DoublyNode<T>* node{ findNode(index - 1) }; // get the one right before it
+			//value = node->next->data; // get the value of the node to be deleted
+			//del = node->next;
+			//node->next = node->next->next; // set the this node to point to the node right after the one in front
+			//node->previous = node;
 		}
 
 		delete del; // YOU ARE DED NO BIG SURPRISE
@@ -163,7 +164,6 @@ public:
 		return value;
 	}
 
-	// Needs patching
 	void removeAll(T value)
 	{
 		//DoublyNode<T>* last{ nullptr };
@@ -173,26 +173,25 @@ public:
 			if (current->getData() == value)
 			{
 				DoublyNode<T>* del{ nullptr };
-				if (current->previous) // Check for null ptr it is incase if the node were looking at is the first one in the their.
+				if (current->getPrevious()) // Check for null ptr it is incase if the node were looking at is the first one in the their.
 				{
-					current->previous->next = current->next;
-					current->next->previous = current->previous;
-					del = current;
+					current->getPrevious()->setNext(current->getNext()); // Set the previous node's next node to the currents next node
+					current->getNext()->setPrevious(current->getPrevious()); // Set the next node's previous node to the currents previous node
+					del = current; // Assign the node for deletion
 				}
 				else
 				{
-					first = current->next;
-					first->previous = nullptr;
+					first = current->getNext(); // Set the head node to the next over
+					first->setPrevious(nullptr); // Deassociate the previous node
 					del = current;
 				}
 				// Keep last the same
-				current = current->next; // Skip over the discarted node
+				current = current->getNext(); // Advance
 				delete del; // Delete the node
 				size--; // Decrement
 			}
 			else
 			{
-				last = current; // Current node becomes last known node
 				current = current->getNext(); // Advance to the next
 			}
 		}
@@ -221,7 +220,7 @@ protected:
 
 		DoublyNode<T>* node = first;
 		for (int i = 0; i < index; i++) // find that damm node
-			node = node->getNext();
+			node = node->next;
 
 		return node;
 	}

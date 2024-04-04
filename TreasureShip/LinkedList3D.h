@@ -1,3 +1,9 @@
+/*
+* Author: Andrew Vu, Brian Macias Garcia
+* Changelog:
+* 1.Apr.2024 Created
+*/
+
 #pragma once
 #include "LinkedList2D.h"
 #include "DataTypes.h"
@@ -57,7 +63,7 @@ protected:
 
 	Node<T>* findNode(Point<int> point)
 	{
-		if (point.X >= size)
+		if (point.X >= xSize)
 			return NULL; // Sup
 
 		Node<LinkedList2D<T>>* xAxisNode = headList; // Find X list
