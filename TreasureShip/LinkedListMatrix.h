@@ -5,16 +5,112 @@
 */
 
 #pragma once
-#include "LinkedList2D.h"
+#include "LinkedList.h"
 #include "DataTypes.h"
-#include "LinkedList3D.h"
+#include "LinkedList2D.h"
+#include <iostream>
 
 template <typename T>
-class LinkedListMatrix : public LinkedList3D<T>
+class LinkedListMatrix
 {	
 public:
-	LinkedListMatrix(Size<int> size) : LinkedList3D<T>() {
-		
+	LinkedListMatrix(Size<int> dimension) {
+		this->dimension = dimension;
+		leftTop = new QuadlyNode<T>{ nullptr, nullptr, 0, nullptr, nullptr };
+		QuadlyNode<T>* currentItem = leftTop;
+		QuadlyNode<T>* currentLine = currentItem;
+		QuadlyNode<T>* previousLineNode = nullptr;
+		for (int y = 0; y < dimension.Y; y++)
+		{
+			for (int x = 1; x < dimension.X; x++)
+			{
+				currentItem->setNext(new QuadlyNode<T>{ nullptr, currentItem, 0, nullptr, nullptr }); // Debug Data Included
+
+				if (y > 0)
+				{
+					currentItem->setUp(previousLineNode);
+					previousLineNode->setDown(currentItem);
+					previousLineNode = previousLineNode->getNext();
+				}
+
+				currentItem = currentItem->getNext();
+			}
+
+			//if (y > 0)
+			//{ 
+			//	currentItem->setUp(previousLineNode);
+			//	previousLineNode->setDown(currentItem); // Last line
+			//}
+			
+			if (y - 1 != dimension.Y)
+			{
+				previousLineNode = currentLine;
+				currentLine = new QuadlyNode<T>{ previousLineNode, nullptr, 0, nullptr, nullptr }; // Create the next line
+				currentItem = currentLine;
+				previousLineNode->setDown(currentLine);
+			}
+		}
+
+		rightBottom = currentItem;
 	}
+
+	T get(Point<int> point)
+	{
+		return findNode(point)->getData();
+	}
+
+	void set(Point<int> point, T item)
+	{
+		findNode(point)->setData(item);
+	}
+
+	Size<int> getDimensions()
+	{
+		return dimension;
+	}
+
+	template <typename T>
+	friend ostream& operator<<(ostream& out, const LinkedListMatrix<T> matrix);
+
+private:
+	QuadlyNode<T>* findNode(Point<int> point)
+	{
+		if (!dimension.isPointInRange(point))
+			return nullptr;
+
+		QuadlyNode<T>* node{ leftTop };
+		for (int y = 0; y < point.Y; y++)
+			node = node->getDown();
+
+		for (int x = 0; x < point.X; x++)
+			node = node->getNext();
+
+		return node;
+	}
+	Size<int> dimension;
+	QuadlyNode<T>* lastAccess; // idk, it just there look AT ME MENACINGLY!
+	QuadlyNode<T>* leftTop;
+	QuadlyNode<T>* rightBottom;
 };
+
+template <typename T>
+ostream& operator<<(ostream& out, const LinkedListMatrix<T> matrix)
+{
+	QuadlyNode<T>* XLine = matrix.leftTop;
+	QuadlyNode<T>* YLine = matrix.leftTop;
+	for (int y = 0; y < matrix.dimension.Y; y++)
+	{
+		out << "[";
+		for (int x = 0; x < matrix.dimension.X - 1; x++)
+		{
+			out << XLine->getData() << ", ";
+			XLine = XLine->getNext();
+		}
+		out << XLine->getData() << "]" << endl;
+		XLine = YLine->getDown();
+		YLine = XLine;
+	}
+
+	return out;
+}
 

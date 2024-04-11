@@ -140,15 +140,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="DataTypes.cpp" />
+    <ClCompile Include="LinkedList.cpp" />
     <ClCompile Include="LinkedList2D.cpp" />
-    <ClCompile Include="LinkedList3D.cpp" />
     <ClCompile Include="LinkedListMatrix.cpp" />
     <ClCompile Include="MainApp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DataTypes.h" />
+    <ClInclude Include="LinkedList.h" />
     <ClInclude Include="LinkedList2D.h" />
-    <ClInclude Include="LinkedList3D.h" />
     <ClInclude Include="LinkedListMatrix.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
