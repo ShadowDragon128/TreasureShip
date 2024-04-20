@@ -127,6 +127,11 @@ namespace DataTypes
 			return X >= point.X && Y >= point.Y;
 		}
 
+		bool isPointInRange(int x, int y) // Why not?
+		{
+			return X >= x && Y >= y;
+		}
+
 		T X, Y;
 	};
 };

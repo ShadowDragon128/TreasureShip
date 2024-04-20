@@ -16,6 +16,74 @@ class LinkedListMatrix
 public:
 	LinkedListMatrix(Size<int> dimension) {
 		this->dimension = dimension;
+		Initialize();
+	}
+
+	LinkedListMatrix(int x, int y)
+	{
+		this->dimension = Size<int>(x, y);
+		Initialize();
+	}
+
+	T get(Point<int> point)
+	{
+		return findNode(point)->getData();
+	}
+
+	T get(int x, int y)
+	{
+		return findNode(x, y)->getData();
+	}
+
+	void set(Point<int> point, T item)
+	{
+		findNode(point)->setData(item);
+	}
+
+	void set(int x, int y, T item)
+	{
+		findNode(x, y)->setData(item);
+	}
+
+	Size<int> getDimensions()
+	{
+		return dimension;
+	}
+
+	template <typename T>
+	friend ostream& operator<<(ostream& out, const LinkedListMatrix<T> matrix);
+
+private:
+	QuadlyNode<T>* findNode(Point<int> point)
+	{
+		if (!dimension.isPointInRange(point))
+			return nullptr;
+
+		QuadlyNode<T>* node{ leftTop };
+		for (int y = 0; y < point.Y; y++)
+			node = node->getDown();
+
+		for (int x = 0; x < point.X; x++)
+			node = node->getNext();
+
+		return node;
+	}
+	QuadlyNode<T>* findNode(int x, int y)
+	{
+		if (!dimension.isPointInRange(x, y))
+			return nullptr;
+
+		QuadlyNode<T>* node{ leftTop };
+		for (int _y = 0; _y < y; _y++)
+			node = node->getDown();
+
+		for (int _x = 0; _x < y; _x++)
+			node = node->getNext();
+
+		return node;
+	}
+	void Initialize()
+	{
 		leftTop = new QuadlyNode<T>{ nullptr, nullptr, 0, nullptr, nullptr };
 		QuadlyNode<T>* currentItem = leftTop;
 		QuadlyNode<T>* currentLine = currentItem;
@@ -41,7 +109,7 @@ public:
 			//	currentItem->setUp(previousLineNode);
 			//	previousLineNode->setDown(currentItem); // Last line
 			//}
-			
+
 			if (y - 1 != dimension.Y)
 			{
 				previousLineNode = currentLine;
@@ -52,40 +120,6 @@ public:
 		}
 
 		rightBottom = currentItem;
-	}
-
-	T get(Point<int> point)
-	{
-		return findNode(point)->getData();
-	}
-
-	void set(Point<int> point, T item)
-	{
-		findNode(point)->setData(item);
-	}
-
-	Size<int> getDimensions()
-	{
-		return dimension;
-	}
-
-	template <typename T>
-	friend ostream& operator<<(ostream& out, const LinkedListMatrix<T> matrix);
-
-private:
-	QuadlyNode<T>* findNode(Point<int> point)
-	{
-		if (!dimension.isPointInRange(point))
-			return nullptr;
-
-		QuadlyNode<T>* node{ leftTop };
-		for (int y = 0; y < point.Y; y++)
-			node = node->getDown();
-
-		for (int x = 0; x < point.X; x++)
-			node = node->getNext();
-
-		return node;
 	}
 	Size<int> dimension;
 	QuadlyNode<T>* lastAccess; // idk, it just there look AT ME MENACINGLY!
