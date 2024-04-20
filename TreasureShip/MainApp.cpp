@@ -40,7 +40,7 @@ int main() {
 	LinkedListMatrix<int>* o = new LinkedListMatrix<int>(Size<int>(5, 5));
 
 
-	o->set(Point<int>(3, 3), 5);
+	//o->set(Point<int>(3, 3), 5);
 	LinkedListMatrix<int>* anObj = new LinkedListMatrix<int>(Size<int>(5,5));
 	//Treasure location:
 	anObj->set(Point<int>(1, 1), 999);
@@ -49,15 +49,28 @@ int main() {
 	anObj->set(Point<int>(4, 4), 999);
 	anObj->set(Point<int>(0, 1), 999);
 	//Ship location:
-	anObj->set(Point<int>(3, 1), 555);
-	cout << "You want to move it! " << endl;
-	
-	cout << o->get(Point<int>(3, 3)) << endl;
+	Point<int>(3,1);
+	//cout << o->get(Point<int>(3, 3)) << endl;
 	cout << anObj->get(Point<int>(1, 1));
 	cout << anObj->get(Point<int>(2, 4));
 	cout << anObj->get(Point<int>(3, 1));
 	cout << anObj->get(Point<int>(4, 4));
-	cout << anObj->get(Point<int>(0, 1)) << endl;
-	cout << *o <<endl;
+	cout << anObj->get(Point<int>(0, 1));
+	//cout << *o <<endl;
 	cout << *anObj;
+	int x, y = 0;
+	for (int i = 0; i < 10; i++) {
+		cout << "You want to move it! " << endl;
+		cout << "Enter x and y values: " << endl;
+		cin >> x;
+		cin >> y;
+		if (moveAndCheck(anObj, x, y) == true) {
+			anObj->set(Point<int>(x, y), 444);
+		}
+		else {
+			anObj->set(Point<int>(x, y), 555);
+		}
+		//Print the matrix after moving
+		cout << *anObj;
+	}
 }
