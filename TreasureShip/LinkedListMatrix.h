@@ -77,7 +77,7 @@ private:
 		for (int _y = 0; _y < y; _y++)
 			node = node->getDown();
 
-		for (int _x = 0; _x < y; _x++)
+		for (int _x = 0; _x < x; _x++)
 			node = node->getNext();
 
 		return node;

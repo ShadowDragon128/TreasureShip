@@ -48,7 +48,7 @@ public:
 
 	LinkedList<T>& operator=(const LinkedList<T>& list)
 	{
-		if (!list.first) // "IT'S FUC**** RAW, GET OUT!" - Gordon Ramsey
+		if (!list.first) // 
 			return *this;
 
 		for (int e = 0; e < size; e++)
@@ -126,8 +126,7 @@ public:
 			return;
 		}
 
-		DoublyNode<T>* node{ findNode(index - 1) }; // find that damm node
-
+		DoublyNode<T>* node{ findNode(index - 1) }; // find that node
 		DoublyNode<T>* insert = new DoublyNode<T>{ node, item, node->getNext() }; // create a new node pointing to the next node
 		node->setNext(insert); // set this node to point to insert
 
