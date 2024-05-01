@@ -50,6 +50,49 @@ public:
 		return dimension;
 	}
 
+	// It just made it easier to do it with in the class
+	void printMatrix(T xMarker, T tMarker)
+	{
+		QuadlyNode<T>* XLine = leftTop;
+		QuadlyNode<T>* YLine = leftTop;
+		for (int y = 0; y < dimension.Y; y++)
+		{
+			cout << "|";
+			for (int x = 0; x < dimension.X - 1; x++)
+			{
+				T temp = XLine->getData();
+				if (temp == xMarker)
+				{
+					cout << "X, ";
+				}
+				else if (temp == tMarker)
+				{
+					cout << "T, ";
+				}
+				else
+				{
+					cout << "-, ";
+				}
+				XLine = XLine->getNext();
+			}
+			T temp = XLine->getData();
+			if (temp == xMarker)
+			{
+				cout << "X|" << endl;
+			}
+			else if (temp == tMarker)
+			{
+				cout << "T|" << endl;
+			}
+			else
+			{
+				cout << "-|" << endl;
+			}
+			XLine = YLine->getDown();
+			YLine = XLine;
+		}
+	}
+
 	template <typename T>
 	friend ostream& operator<<(ostream& out, const LinkedListMatrix<T> matrix);
 
@@ -103,12 +146,6 @@ private:
 
 				currentItem = currentItem->getNext();
 			}
-
-			//if (y > 0)
-			//{ 
-			//	currentItem->setUp(previousLineNode);
-			//	previousLineNode->setDown(currentItem); // Last line
-			//}
 
 			if (y - 1 != dimension.Y)
 			{

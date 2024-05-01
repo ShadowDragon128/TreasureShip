@@ -49,7 +49,7 @@ public:
 
 	LinkedList<T>& operator=(const LinkedList<T>& list)
 	{
-		if (!list.first) // 
+		if (!list.first)
 			return *this;
 
 		for (int e = 0; e < size; e++)
