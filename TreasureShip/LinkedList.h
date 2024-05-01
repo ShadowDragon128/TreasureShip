@@ -3,6 +3,7 @@
 * Changelog:
 * 1.Apr.2024 Copy of Brian's LinkedList class
 * 4.April.2024 Modified to use doubly linked lists
+* 25 Apr. 2024 Copied over
 */
 
 #pragma once
@@ -201,13 +202,20 @@ public:
 
 	~LinkedList()
 	{
-		for (int e = 0; e < size; e++)
+		if (first)
 		{
-			DoublyNode<T>* del{ first };
-			first = first->getNext();
-			delete del;
+			for (int e = 0; e < size; e++)
+			{
+				DoublyNode<T>* del{ first };
+				first = first->getNext();
+				delete del;
+			}
+
+			first = nullptr;
+			last = nullptr;
 		}
 	}
+
 protected:
 	int size{ 0 };
 	DoublyNode<T>* first{ nullptr };
@@ -216,7 +224,10 @@ protected:
 	DoublyNode<T>* findNode(int index)
 	{
 		if (index >= size)
-			return NULL;
+			return last;
+
+		if (index < 0)
+			return first;
 
 		DoublyNode<T>* node = first;
 		for (int i = 0; i < index; i++) // find that damm node

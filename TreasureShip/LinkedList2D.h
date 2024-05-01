@@ -17,6 +17,55 @@ public:
 	LinkedList2D() : LinkedList<T>() {
 	}
 
+	LinkedList2D(const LinkedList2D<T>& list) : LinkedList<T>() {
+		if (!list.headList)
+			return;
+		
+		headList = new DoublyNode<LinkedList<T>*>{ nullptr, new LinkedList<T>{ list.first }, nullptr }; // Create the first node to hold the firs list
+		DoublyNode<LinkedList<T>*>* temp = headList; // staring node
+		DoublyNode<LinkedList<T>*>* nextItem = list.headList->getNext(); // go to the next list to copy
+		for (int x = 0; x < xSize; x++)
+		{
+			temp->setNext(new DoublyNode<LinkedList<T>*>{ temp, new LinkedList<T>{ nextItem->data }, nullptr }); // set the next node to this and this is a copy node of a list
+			temp = temp->getNext(); // move over a node list
+			nextItem = nextItem->getNext(); // get the newly created node
+		}
+
+		// create the last node sometime
+
+		xSize = list.size;
+	}
+
+	LinkedList2D<T>& operator=(const LinkedList2D<T>& list)
+	{
+		if (!list.headList)
+			return;
+
+		for (int e = 0; e < xSize; e++)
+		{
+			DoublyNode<LinkedList<T>*>* del{ headList };
+			for (int g = 0; g < static_cast<LinkedList<T>*>(headList->getData())->getSize(); g++) { // Everything is fine HOOMEEESs
+
+			}
+			headList = headList->getNext();
+			delete del;
+		}
+
+		headList = new DoublyNode<LinkedList<T>*>{ nullptr, new LinkedList<T>{ list.first }, nullptr }; // Create the first node to hold the firs list
+		DoublyNode<LinkedList<T>*>* temp = headList; // staring node
+		DoublyNode<LinkedList<T>*>* nextItem = list.headList->getNext(); // go to the next list to copy
+		for (int x = 0; x < xSize; x++)
+		{
+			temp->setNext(new DoublyNode<LinkedList<T>*>{ temp, new LinkedList<T>{ nextItem->data }, nullptr }); // set the next node to this and this is a copy node of a list
+			temp = temp->getNext(); // move over a node list
+			nextItem = nextItem->getNext(); // get the newly created node
+		}
+
+		// create the last node sometime
+
+		xSize = list.size;
+	}
+
 	void prepend(T item, int index)
 	{
 		findList(index)->prepend(item);
