@@ -89,7 +89,7 @@ namespace DataTypes
 	struct Point
 	{
 	public:
-		//Point() {}
+		Point() {}
 
 		Point(T X, T Y) {
 			this->X = X;
@@ -99,6 +99,23 @@ namespace DataTypes
 		bool isAxisInRange(Point<T> rect)
 		{
 			return X >= rect.X && Y >= rect.Y;
+		}
+
+		Point& operator=(const Point* other)
+		{
+			this->X = other->X;
+			this->Y = other->Y;
+			return *this;
+		}
+
+		friend bool operator!=(const Point<T>& one, const Point<T>& two)
+		{
+			return !(one.X == two.X && one.Y == two.Y);
+		}
+
+		friend bool operator==(const Point<T>& one, const Point<T>& two)
+		{
+			return one.X == two.X && one.Y == two.Y;
 		}
 
 		T X, Y;

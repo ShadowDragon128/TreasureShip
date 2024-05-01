@@ -26,18 +26,16 @@ bool moveAndCheck(LinkedListMatrix<int>* matrix,int x, int y) {
 	/*cout << "Call" << endl;
 	cout << matrix->get(x, y) << endl;*/
 	if (matrix->get(x, y) == 9) {
-		cout << "Found a treasure at the location (" << x << "," << y << ")" << endl;
 		//cout << "Your ship move to:  (" << x << "," << y << ")" << endl;
 		return true;
 	}
 	else {
-		cout << "Couldn't find the treasure, try next time! " << endl;
 		//cout << "Your ship move to:  (" << x << "," << y << ")" << endl;
 		return false;
 	}
 }
 
-#undef max() // windows I tell ya
+#undef max() // Windows I tell ya
 
 int main() {
 	srand(time(nullptr));
@@ -52,17 +50,28 @@ int main() {
 	//Create 5x5 matrix
 	LinkedListMatrix<int>* anObj = new LinkedListMatrix<int>(matrixSize);
 	//Treasure location, we assign 9 as the value of the tresure
-	//cout << "Created 5 random treasures in 5 different locations, go and find them: " << endl;
 	int counter = 5;
+	Point<int>* rngVal = new Point<int>[counter]; // This is know if a spot has been used twice
+
 	for (int k = 0; k < counter; k++) {
 		int ranX_val = ranX();
 		int ranY_val = ranY();
-		while (ranX_val == 3 && ranY_val == 1) {
-			ranX_val = ranX();
-			ranX_val = ranY();
+		rngVal[k] = new Point<int>(ranX_val, ranY_val);
+
+		int l = k;
+		for (int p = 0; p < k; p++) // Check for duplicates
+		{
+			if (rngVal[p] == rngVal[k])
+			{
+				k--; // or else
+				break;
+			}
 		}
-		//cout << "Treasure created at (" << ranX_val << "," << ranY_val << ")" << endl;
-		anObj->set(ranX_val, ranY_val, 9);
+
+		if (l == k) // set the point if no duplicates were found
+		{
+			anObj->set(rngVal[k], 9);
+		}
 	}
 
 	//cout << *anObj << endl;
@@ -104,15 +113,21 @@ int main() {
 		}
 		cout << endl;
 
-		//cout << x << ", " << y << endl;
 		//4 is the value if we can find a treasure 
 		if (moveAndCheck(anObj, x, y) == true) {
 			anObj->set(x, y, 4);
 			counter--;
+			SetConsoleTextAttribute(streamOut, FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+			cout << "Found a treasure at the location (" << x << "," << y << ")" << endl;
+			cout << counter << " more to go!" << endl;
+			SetConsoleTextAttribute(streamOut, conSBI.wAttributes);
 		}
 		//5 is the value if we can't find a treasure, this is for tracing the location of the ship
-		else {
+		else{
 			anObj->set(x, y, 5);
+			SetConsoleTextAttribute(streamOut, FOREGROUND_RED | FOREGROUND_INTENSITY);
+			cout << "Couldn't find the treasure, try next time! " << endl;
+			SetConsoleTextAttribute(streamOut, conSBI.wAttributes);
 		}
 		//Print the matrix after moving
 		anObj->printMatrix(5, 4);

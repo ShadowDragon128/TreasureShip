@@ -159,7 +159,7 @@ private:
 		rightBottom = currentItem;
 	}
 	Size<int> dimension;
-	QuadlyNode<T>* lastAccess; // idk, it just there look AT ME MENACINGLY!
+	//QuadlyNode<T>* lastAccess; // idk, it just there look AT ME MENACINGLY!
 	QuadlyNode<T>* leftTop;
 	QuadlyNode<T>* rightBottom;
 };

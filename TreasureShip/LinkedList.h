@@ -18,8 +18,7 @@ class LinkedList
 {
 /*
 * Notes:
-* 1) Optimize the findNode function to take advantage of the fact their's pointers to the last node as its doublylinked
-* 2) 
+* 1) Optimize the findNode function to take advantage of the fact theirs pointers to the last node as its doublylinked - Unable to do at the moment
 */
 public:
 	LinkedList()
