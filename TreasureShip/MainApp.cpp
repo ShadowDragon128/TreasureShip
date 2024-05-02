@@ -39,10 +39,10 @@ bool moveAndCheck(LinkedListMatrix<int>* matrix,int x, int y) {
 
 int main() {
 	srand(time(nullptr));
-	HANDLE streamOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	HANDLE streamOut = GetStdHandle(STD_OUTPUT_HANDLE); // Get console output stream
 	CONSOLE_SCREEN_BUFFER_INFO conSBI;
-	GetConsoleScreenBufferInfo(streamOut, &conSBI);
-	SetConsoleTitleW(L"TreasureShip v1");
+	GetConsoleScreenBufferInfo(streamOut, &conSBI); // Get console info
+	SetConsoleTitleW(L"TreasureShip v1"); // set console title
 
 	cout << "TreasureShip\nBy Brian Macias Garcia and Andrew Vu" << endl << endl;
 
@@ -51,7 +51,7 @@ int main() {
 	LinkedListMatrix<int>* anObj = new LinkedListMatrix<int>(matrixSize);
 	//Treasure location, we assign 9 as the value of the tresure
 	int counter = 5;
-	Point<int>* rngVal = new Point<int>[counter]; // This is know if a spot has been used twice
+	Point<int>* rngVal = new Point<int>[counter]; // This is how we know if a spot has been used twice
 
 	for (int k = 0; k < counter; k++) {
 		int ranX_val = ranX();
@@ -68,7 +68,7 @@ int main() {
 			}
 		}
 
-		if (l == k) // set the point if no duplicates were found
+		if (l == k) // set the point if no duplicates are found
 		{
 			anObj->set(rngVal[k], 9);
 		}
@@ -117,17 +117,17 @@ int main() {
 		if (moveAndCheck(anObj, x, y) == true) {
 			anObj->set(x, y, 4);
 			counter--;
-			SetConsoleTextAttribute(streamOut, FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+			SetConsoleTextAttribute(streamOut, FOREGROUND_GREEN | FOREGROUND_INTENSITY); // Set text color to green
 			cout << "Found a treasure at the location (" << x << "," << y << ")" << endl;
 			cout << counter << " more to go!" << endl;
-			SetConsoleTextAttribute(streamOut, conSBI.wAttributes);
+			SetConsoleTextAttribute(streamOut, conSBI.wAttributes); // Restore original color
 		}
 		//5 is the value if we can't find a treasure, this is for tracing the location of the ship
 		else{
 			anObj->set(x, y, 5);
-			SetConsoleTextAttribute(streamOut, FOREGROUND_RED | FOREGROUND_INTENSITY);
+			SetConsoleTextAttribute(streamOut, FOREGROUND_RED | FOREGROUND_INTENSITY); // Set text color to red
 			cout << "Couldn't find the treasure, try next time! " << endl;
-			SetConsoleTextAttribute(streamOut, conSBI.wAttributes);
+			SetConsoleTextAttribute(streamOut, conSBI.wAttributes); // Restore original color
 		}
 		//Print the matrix after moving
 		anObj->printMatrix(5, 4);

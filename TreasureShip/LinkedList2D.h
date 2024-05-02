@@ -10,6 +10,8 @@
 
 using namespace DataTypes;
 
+// Incomplete System
+
 template <typename T>
 class LinkedList2D : private LinkedList<T>
 {
@@ -36,7 +38,7 @@ public:
 		xSize = list.size;
 	}
 
-	LinkedList2D<T>& operator=(const LinkedList2D<T>& list)
+	LinkedList2D<T>& operator=(const LinkedList2D<T>& list) // Incomplete
 	{
 		if (!list.headList)
 			return;
@@ -110,6 +112,20 @@ public:
 			//LinkedList<T>* s = currentList->getData();
 			//s->removeAll(value);
 			static_cast<LinkedList<T>*>(currentList->getData())->removeAll(value); // YOur fine
+		}
+	}
+
+	~LinkedList2D()
+	{
+		if (headList)
+		{
+			DoublyNode<T>* first = headList;
+			for (int x = 0; x < xSize; x++)
+			{
+				DoublyNode<T>* temp = first;
+				first = first->getNext();
+				delete temp;
+			}
 		}
 	}
 

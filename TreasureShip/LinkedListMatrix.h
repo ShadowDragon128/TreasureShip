@@ -50,6 +50,27 @@ public:
 		return dimension;
 	}
 
+	~LinkedListMatrix()
+	{
+		if (leftTop)
+		{
+			QuadlyNode<T>* left = leftTop->getDown();
+			for (int y = 0; y < dimension.Y; y++)
+			{
+				QuadlyNode<T>* target = left->getUp();
+				for (int x = 0; x < dimension.X; x++)
+				{
+					QuadlyNode<T>* del = target;
+					target = target->getNext();
+					delete del;
+				}
+				left = left->getDown();
+			}
+			leftTop = nullptr;
+			rightBottom = nullptr;
+		}
+	}
+
 	// It just made it easier to do it with in the class
 	void printMatrix(T xMarker, T tMarker)
 	{
